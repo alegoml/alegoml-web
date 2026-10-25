@@ -1,0 +1,113 @@
+---
+import { getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import TopBar from './TopBar.astro';
+import ContactDock from './ContactDock.astro';
+import { formatDate, home, other, site, ui, type Lang } from '../i18n';
+import { getPosts, getProjects, postUrl } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+
+const about = await getEntry('about', lang);
+if (!about) throw new Error(`Falta src/content/about/${lang}.md`);
+const { Content: Bio } = await render(about);
+
+const projects = await Promise.all(
+  (await getProjects(lang)).map(async (p) => ({ p, Story: (await render(p)).Content })),
+);
+const posts = await getPosts(lang);
+const year = new Date().getFullYear();
+---
+
+<Base lang={lang} title={site.name} description={about.data.description} path={home[lang]} alternates={home}>
+  <main class="page">
+    <TopBar lang={lang} switchHref={home[other(lang)]} />
+
+    <header class="intro">
+      <h1>{site.name}</h1>
+      <p class="sub">{about.data.subtitle}</p>
+    </header>
+
+    <section class="bio">
+      <Bio />
+    </section>
+
+    <h2>{t.projects}</h2>
+    {
+      projects.length === 0 ? (
+        <p class="empty">{t.noProjects}</p>
+      ) : (
+        <ul class="projects">
+          {projects.map(({ p, Story }) => (
+            <li>
+              <details>
+                <summary>
+                  <span>
+                    <span class="pname">{p.data.title}</span>
+                    <span class="pdesc">{p.data.kind}</span>
+                  </span>
+                  <span class="pmeta">
+                    {p.data.year}
+                    {p.data.status && <span class="st">{p.data.status}</span>}
+                  </span>
+                  <span class="sign" aria-hidden="true" />
+                </summary>
+                <div class="story">
+                  <Story />
+                  {p.data.tech.length > 0 && <p class="tech">{p.data.tech.join(' · ')}</p>}
+                  {p.data.links.length > 0 && (
+                    <div class="plinks">
+                      {p.data.links.map((l) => (
+                        <a href={l.url} target="_blank" rel="noopener">
+                          {l.label} ↗
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </details>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    <h2>{t.blog}</h2>
+    {
+      posts.length === 0 ? (
+        <p class="empty">{t.noPosts}</p>
+      ) : (
+        <ul class="list">
+          {posts.map((post) => (
+            <li>
+              <span class="d">{formatDate(post.data.date)}</span>
+              <a class="t" href={postUrl(lang, post.id)}>
+                {post.data.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    <section class="contact">
+      <h2>{t.contact}</h2>
+      <p>{t.contactText}</p>
+      <nav class="links">
+        <a href={`mailto:${site.email}`}>Email</a>
+        <a href={site.x} target="_blank" rel="noopener">X</a>
+        <a href={site.github} target="_blank" rel="noopener">GitHub</a>
+        <a href={site.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+        {site.cv && <a href={site.cv} target="_blank" rel="noopener">CV</a>}
+      </nav>
+    </section>
+
+    <footer>{site.name} · {year}</footer>
+  </main>
+  <ContactDock lang={lang} />
+</Base>

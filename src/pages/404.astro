@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import TopBar from '../components/TopBar.astro';
+import { home, site, ui } from '../i18n';
+---
+
+<Base lang="es" title={`404 · ${site.name}`} description={ui.es.notFound} path="/404">
+  <main class="page">
+    <TopBar lang="es" switchHref={home.en} />
+    <header class="intro notfound">
+      <h1>404</h1>
+      <p class="sub">{ui.es.notFound}</p>
+      <p lang="en">{ui.en.notFound}</p>
+      <a class="back" href={home.es}>{ui.es.back}</a>
+    </header>
+  </main>
+</Base>

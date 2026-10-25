@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://alegoml.com/sitemap-index.xml

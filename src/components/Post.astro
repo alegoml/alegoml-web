@@ -1,0 +1,51 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import TopBar from './TopBar.astro';
+import ContactDock from './ContactDock.astro';
+import { formatDate, home, other, site, ui, type Lang } from '../i18n';
+import { postUrl, slugOf } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+  post: CollectionEntry<'blog'>;
+}
+
+const { lang, post } = Astro.props;
+const t = ui[lang];
+const { Content } = await render(post);
+
+// ¿Existe este mismo artículo en el otro idioma?
+const slug = slugOf(post.id);
+const translation = await getEntry('blog', `${other(lang)}/${slug}`);
+const hasTranslation = translation && !translation.data.draft;
+const alternates = hasTranslation
+  ? ({ [lang]: postUrl(lang, post.id), [other(lang)]: postUrl(other(lang), translation.id) } as Record<Lang, string>)
+  : undefined;
+const switchHref = hasTranslation ? postUrl(other(lang), translation.id) : home[other(lang)];
+const year = new Date().getFullYear();
+---
+
+<Base
+  lang={lang}
+  title={`${post.data.title} · ${site.name}`}
+  description={post.data.description ?? post.data.title}
+  path={postUrl(lang, post.id)}
+  alternates={alternates}
+  type="article"
+>
+  <main class="page">
+    <TopBar lang={lang} switchHref={switchHref} />
+    <a class="back" href={home[lang]}>{t.back}</a>
+    <article class="post">
+      <h1>{post.data.title}</h1>
+      <p class="date">{formatDate(post.data.date)}</p>
+      <div class="prose">
+        <Content />
+      </div>
+    </article>
+    <footer>{site.name} · {year}</footer>
+  </main>
+  <ContactDock lang={lang} />
+</Base>

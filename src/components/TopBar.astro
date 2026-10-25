@@ -1,0 +1,77 @@
+---
+import { agents, ui, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  // Enlace a esta misma página en el otro idioma (o a su portada)
+  switchHref: string;
+}
+
+const { lang, switchHref } = Astro.props;
+const t = ui[lang];
+---
+
+<div class="bar">
+  <details class="agent" id="agent">
+    <summary>
+      <span class="long">{t.agent}</span><span class="short">{t.agentShort}</span><span class="arr" aria-hidden="true">↓</span>
+    </summary>
+    <div class="menu">
+      <div class="hint">{t.agentHint}</div>
+      {
+        agents.map((a) => (
+          <a href={a.url(t.prompt)} target="_blank" rel="noopener">
+            {a.name} <span class="k" aria-hidden="true">↗</span>
+          </a>
+        ))
+      }
+      <button type="button" id="copy" data-prompt={t.prompt} data-copied={t.copied}>
+        <span class="lbl">{t.copy}</span><span class="k" aria-hidden="true">⧉</span>
+      </button>
+    </div>
+  </details>
+
+  <div class="right">
+    <nav class="lang" aria-label={t.langLabel}>
+      {lang === 'es' ? <span aria-current="page">ES</span> : <a href={switchHref} hreflang="es" lang="es">ES</a>}
+      {lang === 'en' ? <span aria-current="page">EN</span> : <a href={switchHref} hreflang="en" lang="en">EN</a>}
+    </nav>
+    <button class="theme" id="theme" type="button" aria-label={t.themeLabel} title={t.themeLabel}>
+      <svg class="moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" aria-hidden="true">
+        <path d="M13.5 9.6A5.6 5.6 0 0 1 6.4 2.5a5.6 5.6 0 1 0 7.1 7.1Z"></path>
+      </svg>
+      <svg class="sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true">
+        <circle cx="8" cy="8" r="3"></circle>
+        <path d="M8 1.5v1.3M8 13.2v1.3M1.5 8h1.3M13.2 8h1.3M3.4 3.4l.9.9M11.7 11.7l.9.9M3.4 12.6l.9-.9M11.7 4.3l.9-.9"></path>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script>
+  const root = document.documentElement;
+
+  // Tema claro / oscuro
+  document.getElementById('theme')?.addEventListener('click', () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem('alegoml-theme', next); } catch {}
+  });
+
+  // Cerrar el menú del agente al pulsar fuera
+  const agent = document.getElementById('agent') as HTMLDetailsElement | null;
+  document.addEventListener('click', (e) => {
+    if (agent?.open && !agent.contains(e.target as Node)) agent.open = false;
+  });
+
+  // Copiar el prompt
+  const copy = document.getElementById('copy');
+  copy?.addEventListener('click', async () => {
+    const label = copy.querySelector('.lbl');
+    if (!label) return;
+    const previous = label.textContent;
+    try { await navigator.clipboard.writeText(copy.dataset.prompt ?? ''); } catch {}
+    label.textContent = copy.dataset.copied ?? '';
+    setTimeout(() => { label.textContent = previous; }, 1800);
+  });
+</script>
