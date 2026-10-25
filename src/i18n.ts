@@ -35,7 +35,7 @@ export const ui = {
     noPosts: 'Todavía no he escrito nada.',
     contact: 'Contacto',
     contactText:
-      'Si estás construyendo algo con IA o tu startup busca a alguien en prácticas, estaré encantado de hablar.',
+      'Estoy abierto a prácticas, a colaborar en proyectos y, en general, a hablar con cualquier persona que quiera contactarme. Si crees que puedo ayudarte en algo, escríbeme.',
     dockTitle: '¿Quieres conocerme?',
     dockText: 'Tengo los DMs de X abiertos.',
     dockButton: 'Escríbeme',
@@ -60,7 +60,7 @@ export const ui = {
     noPosts: 'Nothing written yet.',
     contact: 'Contact',
     contactText:
-      "If you're building something with AI or your startup is looking for an intern, I'd be glad to talk.",
+      "I'm open to internships, to collaborating on projects and, more generally, to talking with anyone who wants to reach out. If you think I can help you with something, get in touch.",
     dockTitle: 'Want to get to know me?',
     dockText: 'My X DMs are open.',
     dockButton: 'DM me',
