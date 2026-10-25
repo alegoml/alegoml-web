@@ -27,4 +27,4 @@ Los archivos que empiezan por `_` no se publican. Con `draft: true` tampoco.
 
 ## Publicar
 
-Cada `git push` a `main` despliega la web en Cloudflare Pages.
+La web está en Cloudflare Workers (archivos estáticos, configurado en `wrangler.jsonc`). Cada `git push` a `main` la vuelve a construir y desplegar.
