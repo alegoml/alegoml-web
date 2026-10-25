@@ -27,4 +27,4 @@ Los archivos que empiezan por `_` no se publican. Con `draft: true` tampoco.
 
 ## Publicar
 
-La web está en Cloudflare Workers (archivos estáticos, configurado en `wrangler.jsonc`). Cada `git push` a `main` la vuelve a construir y desplegar.
+La web está en GitHub Pages. Cada `git push` a `main` la construye y la publica con GitHub Actions (`.github/workflows/deploy.yml`). El dominio está en Cloudflare solo como DNS, sin proxy, para evitar los bloqueos de IPs de Cloudflare durante los partidos de LaLiga.
