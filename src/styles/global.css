@@ -38,7 +38,7 @@ em { font-style: normal; color: var(--ink); }
 
 /* barra superior */
 .bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 13px; color: var(--faint); }
-.bar .right { display: flex; align-items: center; gap: 2px; }
+.bar .right { display: flex; align-items: center; gap: 2px; margin-left: auto; }
 .bar .lang { display: flex; }
 .bar .lang a, .bar .lang span { display: inline-flex; align-items: center; min-height: 40px; padding: 0 6px; color: var(--faint); text-decoration: none; }
 .bar .lang a:hover, .bar .lang [aria-current] { color: var(--ink); }

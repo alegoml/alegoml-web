@@ -10,6 +10,8 @@ export const site = {
   linkedin: 'https://www.linkedin.com/in/alegoml/',
   // Pon aquí la ruta del CV cuando lo tengas, p. ej. '/cv.pdf' (archivo en public/cv.pdf)
   cv: '',
+  // Menú "Pregunta a un agente sobre mí" (oculto de momento; true para volver a mostrarlo)
+  agentMenu: false,
 };
 
 export const home: Record<Lang, string> = { es: '/', en: '/en/' };

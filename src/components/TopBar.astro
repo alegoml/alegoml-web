@@ -1,5 +1,5 @@
 ---
-import { agents, ui, type Lang } from '../i18n';
+import { agents, site, ui, type Lang } from '../i18n';
 
 interface Props {
   lang: Lang;
@@ -12,24 +12,29 @@ const t = ui[lang];
 ---
 
 <div class="bar">
-  <details class="agent" id="agent">
-    <summary>
-      <span class="long">{t.agent}</span><span class="short">{t.agentShort}</span><span class="arr" aria-hidden="true">↓</span>
-    </summary>
-    <div class="menu">
-      <div class="hint">{t.agentHint}</div>
-      {
-        agents.map((a) => (
-          <a href={a.url(t.prompt)} target="_blank" rel="noopener">
-            {a.name} <span class="k" aria-hidden="true">↗</span>
-          </a>
-        ))
-      }
-      <button type="button" id="copy" data-prompt={t.prompt} data-copied={t.copied}>
-        <span class="lbl">{t.copy}</span><span class="k" aria-hidden="true">⧉</span>
-      </button>
-    </div>
-  </details>
+  {
+    site.agentMenu && (
+      <details class="agent" id="agent">
+        <summary>
+          <span class="long">{t.agent}</span>
+          <span class="short">{t.agentShort}</span>
+          <span class="arr" aria-hidden="true">↓</span>
+        </summary>
+        <div class="menu">
+          <div class="hint">{t.agentHint}</div>
+          {agents.map((a) => (
+            <a href={a.url(t.prompt)} target="_blank" rel="noopener">
+              {a.name} <span class="k" aria-hidden="true">↗</span>
+            </a>
+          ))}
+          <button type="button" id="copy" data-prompt={t.prompt} data-copied={t.copied}>
+            <span class="lbl">{t.copy}</span>
+            <span class="k" aria-hidden="true">⧉</span>
+          </button>
+        </div>
+      </details>
+    )
+  }
 
   <div class="right">
     <nav class="lang" aria-label={t.langLabel}>
